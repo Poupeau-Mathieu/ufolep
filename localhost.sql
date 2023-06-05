@@ -103,7 +103,7 @@ INSERT INTO `club` (`idClub`, `nomClub`, `sponsor`, `nomSalle`, `adresseSalle`, 
 (5, 'Benon', '', 'Salle des fêtes Parc du château', 'Rue du château Musset', 8),
 (7, 'Bords', '', 'Salle des halles', 'Place Saint-Vivien', 9),
 (8, 'Burie', '', 'Club de tennis de table de Bue', 'Route du bois Barre', 10),
-(9, 'Loisirs Solinois', '', 'Maison des Associations', 'Rue de l\'Aunis', 11),
+(9, 'Loisirs Solinois', '', 'Maison des Associations', 'Rue de l Aunis', 11),
 (10, 'Smash LR', '', 'Salle France Vatré', 'Rue du vélodrome', 12),
 (11, 'St Hippolyte', '', 'Salle des fêtes', 'Place Eugène Laugraud', 13);
 

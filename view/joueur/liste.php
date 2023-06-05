@@ -16,7 +16,7 @@
                     <th>Joueurs</th>
                     <th>Score</th>
 
-
+                    
                 </tr>
             </thead>
             <?php $place = 1; foreach ($joueurs as $j) : ?>
