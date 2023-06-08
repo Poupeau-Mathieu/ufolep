@@ -29,9 +29,9 @@
         <label><?= $joueur->nbPoints ?></label>
     </div>
     <hr>
-    <!-- <a href="<?= BASE_URL . DS . "/equipes/Equipe/?idEquipe=$e->idEquipe" ?>" class="button primarybuttonBlue">
+    <a href="<?= BASE_URL . DS . "/equipes/Equipe/?idEquipe=$idEquipe" ?>" class="button primarybuttonBlue">
         <i class="fas fa-sort-amount-up-alt"></i>
         &nbspRetour
-    </a> -->
+    </a>
 
 <?php require_once ROOT . DS . "view" . DS . "layout" . DS . "guest" . DS . "_guest_bottom.php"; ?>

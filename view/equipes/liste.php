@@ -19,7 +19,7 @@ require_once ROOT . DS . "view" . DS . "layout" . DS . "guest" . DS . "_guest_to
             </thead>
             <?php foreach ($equipes as $e) : ?>
                 <tr>
-                    <td><?= $e->nomEquipe ?></td>
+                    <td> <?= $e->nomEquipe ?></td>
                     <td> <?= $e->nomClub ?></td>
                     <td> <?= $e->idDivision ?></td>
                     <td>

@@ -40,6 +40,10 @@
 
                     <ul class="list-unstyled">
                         <li>
+                            <a href="<?= BASE_URL . DS . "equipes/liste" ?>"
+                               class="link footer-text">Equipes</a>
+                        </li>
+                        <li>
                             <a href="<?= BASE_URL . DS . "championnat/liste" ?>"
                                class="link footer-text">Championnats</a>
                         </li>

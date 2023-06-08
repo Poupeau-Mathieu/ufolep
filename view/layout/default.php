@@ -33,6 +33,9 @@
             <ul class="navbar-nav mr-auto"></ul>
             <ul class="navbar-nav" style="padding-right:50px;">
                 <li class="nav-item">
+                    <a class="nav-link link" href="<?= BASE_URL . DS . "tournois/liste"; ?>">Tournois</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link link" href="<?= BASE_URL . DS . "equipes/liste"; ?>">Equipes</a>
                 </li>
                 <li class="nav-item">

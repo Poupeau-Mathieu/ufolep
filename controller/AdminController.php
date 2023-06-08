@@ -1603,9 +1603,6 @@ class AdminController extends Controller
             }
         }
 
-
-
-
         else {
 
             $divisionModele = $this->loadModel("division");
@@ -1615,20 +1612,89 @@ class AdminController extends Controller
                 $championnatModele->getColumnFromTable("championnat", "typeChampionnat")["Type"]
             );
 
-
-
         }
 
         $this->set($d);
-
-
-
-
-
-
-
-
-
         $this->render ("modifChampionnat");
+    }
+
+    function formTournois()
+    {
+        $this->filterAndGetUser(2);
+
+        if (isset($_POST["creerTournois"])) {
+            $tournoisModele = $this->loadModel("Tournois");
+
+            $nomTournois = $_POST["nomTournois"];
+
+            $valid1 = filter_var_array(
+                [
+                    "nomTournois" => $nomTournois,
+                ],
+                [
+                    "nomChampionnat" => FILTER_SANITIZE_STRING,
+                ]
+            );
+
+            $nomTournois = Security::shorten($nomTournois, 64);
+
+            if ($valid1) {
+                $tournoisModele->insertAI(
+                    ["nomTournois"],
+                    [$nomTournois]
+                );
+                $this->redirect("/admin/listeTournois");
+            } else {
+                $this->redirect("/admin/formTournois");
+            }
+        } else {
+            $tournoisModele = $this->loadModel("Tournois");
+
+
+            $this->set($d);
+            $this->render("formTournois");
+        }
+    }
+
+    function modifTournois(){
+        $this->filterAndGetUser(1);
+        $tournoisModele = $this->loadModel("Tournois");
+        $idTournois = $_GET["idtournois"];
+        $d["tournois"]= $tournoisModele->find(["conditions" => "idTournois = ".$idTournois] );
+        if (isset($_POST["modifTournois"])) {
+
+
+            $nomTournois = $_POST["nomTournois"];
+
+            $valid1 = filter_var_array(
+                [
+                    "nomTournois" => $nomTournois,
+                ],
+                [
+                    "nomTournois" => FILTER_SANITIZE_STRING,
+                ]
+            );
+
+            $nomTournois = Security::shorten($nomTournois, 64);
+
+            if ($valid1) {
+                $tournoisModele->update([
+                   "donnees"=>
+                    [
+                    "nomTournois"=>$nomTournois,
+                ],
+                    "conditions"=>[
+                        "idTournois" => $idTournois
+
+
+                ]]);
+                $this->redirect("/admin/listeTournois");
+            } else {
+                $this->redirect("/admin/modifTournois");
+            }
+        }
+
+        $this->set($d);
+        $this->render ("modifTournois");
     }
 }

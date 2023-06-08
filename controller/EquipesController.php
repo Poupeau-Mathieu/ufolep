@@ -27,33 +27,45 @@ class EquipesController extends Controller
         $this->modJoueur = $this->loadModel('Joueur');
         $projection = 'personne.nom, personne.prenom, joueur.idJoueur, equipe.nomEquipe, joueur.nbPoints';
         $orderby = 'joueur.nbPoints desc';
-        if (isset($_GET["idEquipe"])) {
-            $id=$_GET["idEquipe"];
-
-    }
-        if (isset($id)){
-            $condition = "joueur.idEquipe=".$id; }
-        else{
-            $id ="";
+    
+        // Récupérer l'id de l'équipe à partir de la requête GET
+        $idEquipe = isset($_GET["idEquipe"]) ? $_GET["idEquipe"] : null;
+        $d['idEquipe'] = $idEquipe;
+    
+        if ($idEquipe) {
+            // Utiliser l'id de l'équipe pour obtenir le nom de l'équipe
+            $this->modEquipe = $this->loadModel('Equipe');
+            $condition = "equipe.idEquipe = " . $idEquipe;
+            $params = array('conditions' => $condition);
+            $equipe = $this->modEquipe->findFirst($params);
+    
+            // Passer le nom de l'équipe à la vue
+            $this->set('nomEquipe', $equipe->nomEquipe);
+        }
+    
+        // Effectuer la recherche des joueurs
+        if ($idEquipe) {
+            $condition = "joueur.idEquipe = " . $idEquipe;
+        } else {
             $condition = 1;
-    }
-
+        }
+    
         $params = array('conditions' => $condition, 'projection' => $projection, 'orderby' => $orderby);
         $d['joueurs'] = $this->modJoueur->find($params);
-
+    
         if (empty($d['joueurs'])) {
             $this->e404('Page introuvable');
-            $this->render ("Equipe");
+            $this->render("Equipe");
         }
-
-        //var_dump ($d['joueurs']);
-       // var_dump ($id);
-
+    
         $this->set($d);
     }
+    
 
     function detail($id) {
-        $idJoueur = trim($id);
+        //$idJoueur = trim($id);
+        $idJoueur=$_GET['idJoueur'];
+        $d['idEquipe']=$_GET['idEquipe'];
         $visible = 1;
         $this->modJoueur = $this->loadModel('Joueur');
         $params = array();
