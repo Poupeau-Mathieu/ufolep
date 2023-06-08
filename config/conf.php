@@ -14,7 +14,7 @@ class Conf
 
             "host" => "localhost",
 
-            "database" => "btssio17_UfoSandBox",
+            "database" => "btssio17_ufolep",
 
             "login" => "btssio17_ufo",
 
