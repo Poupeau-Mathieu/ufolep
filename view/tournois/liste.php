@@ -2,7 +2,7 @@
 require_once ROOT . DS . "view" . DS . "layout" . DS . "guest" . DS . "_guest_top.php"; ?>
 
     <div>
-        <h2>Liste des Tournois</h2>
+        <h2>Liste des Tournois et des matches individuels</h2>
         <hr>
         <a class="button primarybuttonWhite" href="<?= BASE_URL . DS . "championnat/liste" ?>">Acceuil</a>
 

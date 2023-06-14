@@ -1620,81 +1620,175 @@ class AdminController extends Controller
 
     function formTournois()
     {
-        $this->filterAndGetUser(2);
+    $this->filterAndGetUser(2);
+    $tournoisModele = $this->loadModel("Tournois");
 
-        if (isset($_POST["creerTournois"])) {
-            $tournoisModele = $this->loadModel("Tournois");
+    if (isset($_POST["creerTournois"])) {
+        $nomTournois = $_POST["nomTournois"];
 
-            $nomTournois = $_POST["nomTournois"];
+        $valid1 = filter_var_array(
+            [
+                "nomTournois" => $nomTournois,
+            ],
+            [
+                "nomTournois" => FILTER_SANITIZE_STRING,
+            ]
+        );
 
-            $valid1 = filter_var_array(
-                [
-                    "nomTournois" => $nomTournois,
-                ],
-                [
-                    "nomChampionnat" => FILTER_SANITIZE_STRING,
-                ]
+        $nomTournois = Security::shorten($nomTournois, 64);
+
+        if ($valid1) {
+            $tournoisModele->insertAI(
+                ["nomTournois"],
+                [$nomTournois]
             );
-
-            $nomTournois = Security::shorten($nomTournois, 64);
-
-            if ($valid1) {
-                $tournoisModele->insertAI(
-                    ["nomTournois"],
-                    [$nomTournois]
-                );
-                $this->redirect("/admin/listeTournois");
-            } else {
-                $this->redirect("/admin/formTournois");
-            }
+            $this->redirect("/admin/listeTournois");
         } else {
-            $tournoisModele = $this->loadModel("Tournois");
-
-
-            $this->set($d);
-            $this->render("formTournois");
+            $this->redirect("/admin/formTournois");
         }
-    }
+    } else {
+        $d["Tournois"] = [];
 
-    function modifTournois(){
-        $this->filterAndGetUser(1);
-        $tournoisModele = $this->loadModel("Tournois");
-        $idTournois = $_GET["idtournois"];
-        $d["tournois"]= $tournoisModele->find(["conditions" => "idTournois = ".$idTournois] );
-        if (isset($_POST["modifTournois"])) {
-
-
-            $nomTournois = $_POST["nomTournois"];
-
-            $valid1 = filter_var_array(
-                [
-                    "nomTournois" => $nomTournois,
-                ],
-                [
-                    "nomTournois" => FILTER_SANITIZE_STRING,
-                ]
-            );
-
-            $nomTournois = Security::shorten($nomTournois, 64);
-
-            if ($valid1) {
-                $tournoisModele->update([
-                   "donnees"=>
-                    [
-                    "nomTournois"=>$nomTournois,
-                ],
-                    "conditions"=>[
-                        "idTournois" => $idTournois
-
-
-                ]]);
-                $this->redirect("/admin/listeTournois");
-            } else {
-                $this->redirect("/admin/modifTournois");
-            }
+        // Vérifier si l'ID du tournoi est défini dans l'URL
+        if (isset($_GET["idTournois"])) {
+            $idTournois = $_GET["idTournois"];
+            $d["Tournois"] = $tournoisModele->find(["conditions" => "idTournois = ".$idTournois]);
         }
 
         $this->set($d);
-        $this->render ("modifTournois");
+        $this->render("formTournois");
+    }
+}
+
+function modifTournois(){
+    $this->filterAndGetUser(1);
+    $tournoisModele = $this->loadModel("Tournois");
+    $idTournois = $_GET["idtournois"];
+    $d["Tournois"]= $tournoisModele->find(["conditions" => "idTournois = ".$idTournois] );
+    if (isset($_POST["modifTournois"])) {
+
+
+        $nomTournois = $_POST["nomTournois"];
+
+        $valid1 = filter_var_array(
+            [
+                "nomTournois" => $nomTournois,
+            ],
+            [
+                "nomTournois" => FILTER_SANITIZE_STRING,
+            ]
+        );
+
+        $nomTournois = Security::shorten($nomTournois, 64);
+
+        if ($valid1) {
+            $tournoisModele->update([
+               "donnees"=>
+                [
+                "nomTournois"=>$nomTournois,
+            ],
+                "conditions"=>[
+                    "idTournois" => $idTournois
+
+
+            ]]);
+            $this->redirect("/admin/listeTournois");
+        } else {
+            $this->redirect("/admin/modifTournois");
+        }
+    }
+
+    $this->set($d);
+    $this->render ("modifTournois");
+    }
+
+    function listeTournois()
+    {
+        $this->filterAndGetUser(1);
+
+        $this->modTourn = $this->loadModel("Tournois");
+        $d["Tournois"] = $this->modTourn->find(array('orderby' => 'nomTournois'));
+        if (empty($d['Tournois'])) {
+            $this->e404('Page introuvable');
+        }
+        $this->set($d);
+        $this->render("listeTournois");
+    }
+
+    function listeMatchIndividuel()
+    {
+        $this->filterAndGetUser(1);
+
+        $this->modMatch = $this->loadModel('MatchIndividuel');
+        $groupby = "match_individuel.idmatch";
+        $orderby = "match_individuel.idmatch";
+        $params = array();
+        $params = array('groupby' => $groupby, 'orderby'=>$orderby);
+        $d['Matchs'] = $this->modMatch->find($params);
+       // var_dump ($d['equipes']);
+
+        if (empty($d['Matchs'])) {
+            $this->e404('Page introuvable');
+        }
+
+        $this->set($d);
+        $this->render("listeMatchindividuel");
+    }
+
+    function formMatchindividuel()
+    {
+    $this->filterAndGetUser(2);
+    $MatchindividuelModele = $this->loadModel("MatchIndividuel");
+
+    if (isset($_POST["CreerLeMatch"])) {
+        $JR = $_POST["JR"];
+        $JV = $_POST["JV"];
+        $date = $_POST["date"];
+        $lieu = $_POST["lieu"];
+
+
+        $valid1 = filter_var_array(
+            [
+                "JR" => $JR,
+                "JV" => $JV,
+                "date" => $date,
+                "lieu" => $lieu,
+            ],
+            [
+                "JR" => FILTER_SANITIZE_STRING,
+                "JV" => FILTER_SANITIZE_STRING,
+                "date" => FILTER_SANITIZE_STRING,
+                "lieu" => FILTER_SANITIZE_STRING,
+            ]
+        );
+
+        $JR = Security::shorten($JR, 64);
+        $JV = Security::shorten($JV, 64);
+        $lieu = Security::shorten($lieu, 64);
+
+
+        if ($valid1) {
+            $MatchindividuelModele->insertAI(
+                ["JR"],[$JR]
+                ["JV"],[$JV]
+                ["date"],[$date]
+                ["lieu"],[$lieu]
+            );
+            $this->redirect("/admin/listeMatchIndividuel");
+        } else {
+            $this->redirect("/admin/formMatchindividuel");
+        }
+    } else {
+        $d["Matchindividuel"] = [];
+
+        // Vérifier si l'ID du tournoi est défini dans l'URL
+        if (isset($_GET["idmatch"])) {
+            $idmatch = $_GET["idmatch"];
+            $d["Matchindividuel"] = $MatchindividuelModele->find(["conditions" => "idmatch = ".$idmach]);
+        }
+
+        $this->set($d);
+        $this->render("formMatchindividuel");
+        }
     }
 }

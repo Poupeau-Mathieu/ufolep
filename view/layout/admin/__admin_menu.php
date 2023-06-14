@@ -47,6 +47,18 @@
             <div class="col nav-item">Joueurs</div>
         </div>
     </a>
+    <a href="<?= BASE_URL . DS ?>admin/listeTournois">
+        <div class="row mx-0">
+            <div class="nav-item icon-container"><i class="fas fa-table-tennis"></i></div>
+            <div class="col nav-item">Tournois</div>
+        </div>
+    </a>
+    <a href="<?= BASE_URL . DS ?>admin/listeMatchIndividuel">
+        <div class="row mx-0">
+            <div class="nav-item icon-container"><i class="fas fa-table-tennis"></i></div>
+            <div class="col nav-item">Match Individuel</div>
+        </div>
+    </a>
     <hr>
     <?php if ($c_user["typeCompte"] === "GÉRANT"): ?>
         <a href="<?= BASE_URL . DS ?>admin/listePersonne">
