@@ -1715,6 +1715,25 @@ function modifTournois(){
         $this->render("listeTournois");
     }
 
+    function listeMatchIndividuel()
+    {
+        $this->filterAndGetUser(1);
+
+        $this->modMatch = $this->loadModel('MatchIndividuel');
+        $groupby = "match_individuel.idmatch";
+        $orderby = "match_individuel.idmatch";
+        $params = array();
+        $params = array('groupby' => $groupby, 'orderby'=>$orderby);
+        $d['Matchs'] = $this->modMatch->find($params);
+       // var_dump ($d['equipes']);
+
+        if (empty($d['Matchs'])) {
+            $this->e404('Page introuvable');
+        }
+
+        $this->set($d);
+        $this->render("listeMatchIndividuel");
+    }
 
     function formMatchindividuel()
     {
