@@ -1715,80 +1715,61 @@ function modifTournois(){
         $this->render("listeTournois");
     }
 
-    function listeMatchIndividuel()
-    {
-        $this->filterAndGetUser(1);
-
-        $this->modMatch = $this->loadModel('MatchIndividuel');
-        $groupby = "match_individuel.idmatch";
-        $orderby = "match_individuel.idmatch";
-        $params = array();
-        $params = array('groupby' => $groupby, 'orderby'=>$orderby);
-        $d['Matchs'] = $this->modMatch->find($params);
-       // var_dump ($d['equipes']);
-
-        if (empty($d['Matchs'])) {
-            $this->e404('Page introuvable');
-        }
-
-        $this->set($d);
-        $this->render("listeMatchindividuel");
-    }
 
     function formMatchindividuel()
     {
-    $this->filterAndGetUser(2);
-    $MatchindividuelModele = $this->loadModel("MatchIndividuel");
+        $this->filterAndGetUser(2);
+        $MatchindividuelModele = $this->loadModel("MatchIndividuel");
 
-    if (isset($_POST["CreerLeMatch"])) {
-        $JR = $_POST["JR"];
-        $JV = $_POST["JV"];
-        $date = $_POST["date"];
-        $lieu = $_POST["lieu"];
+        $personneModele = $this->loadModel("Personne");
+        $joueurs = $personneModele->find(["fields" => "nom"]);
 
+        if (isset($_POST["CreerLeMatch"])) {
+            $JR = $_POST["JR"];
+            $JV = $_POST["JV"];
+            $date = $_POST["date"];
+            $lieu = $_POST["lieu"];
 
-        $valid1 = filter_var_array(
-            [
-                "JR" => $JR,
-                "JV" => $JV,
-                "date" => $date,
-                "lieu" => $lieu,
-            ],
-            [
-                "JR" => FILTER_SANITIZE_STRING,
-                "JV" => FILTER_SANITIZE_STRING,
-                "date" => FILTER_SANITIZE_STRING,
-                "lieu" => FILTER_SANITIZE_STRING,
-            ]
-        );
-
-        $JR = Security::shorten($JR, 64);
-        $JV = Security::shorten($JV, 64);
-        $lieu = Security::shorten($lieu, 64);
-
-
-        if ($valid1) {
-            $MatchindividuelModele->insertAI(
-                ["JR"],[$JR]
-                ["JV"],[$JV]
-                ["date"],[$date]
-                ["lieu"],[$lieu]
+            $valid1 = filter_var_array(
+                [
+                    "JR" => $JR,
+                    "JV" => $JV,
+                    "date" => $date,
+                    "lieu" => $lieu,
+                ],
+                [
+                    "JR" => FILTER_SANITIZE_STRING,
+                    "JV" => FILTER_SANITIZE_STRING,
+                    "date" => FILTER_SANITIZE_STRING,
+                    "lieu" => FILTER_SANITIZE_STRING,
+                ]
             );
-            $this->redirect("/admin/listeMatchIndividuel");
-        } else {
-            $this->redirect("/admin/formMatchindividuel");
-        }
-    } else {
-        $d["Matchindividuel"] = [];
 
-        // Vérifier si l'ID du tournoi est défini dans l'URL
-        if (isset($_GET["idmatch"])) {
-            $idmatch = $_GET["idmatch"];
-            $d["Matchindividuel"] = $MatchindividuelModele->find(["conditions" => "idmatch = ".$idmach]);
-        }
+            $JR = Security::shorten($JR, 64);
+            $JV = Security::shorten($JV, 64);
+            $lieu = Security::shorten($lieu, 64);
 
-        $this->set($d);
-        $this->render("formMatchindividuel");
+            if ($valid1) {
+                $MatchindividuelModele->insertAI(
+                    ["JR", "JV", "date", "lieu"],
+                    [$JR, $JV, $date, $lieu]
+                );
+                $this->redirect("/admin/listeMatchIndividuel");
+            } else {
+                $this->redirect("/admin/formMatchindividuel");
+            }
+        } else {   
+            $d["Matchindividuel"] = [];
+            $d["joueurs"] = $joueurs;
+
+            if (isset($_GET["idmatch"])) {
+                $idmatch = $_GET["idmatch"];
+                $d["Matchindividuel"] = $MatchindividuelModele->find(["conditions" => "idmatch = ".$idmatch]);
+            }
+
+            $this->set($d);
+            $this->render("formMatchindividuel");
         }
     }
+    
 }
